@@ -30,7 +30,13 @@ import { EdgeFunction } from "./EdgeFunction.js";
 import { SsrSite, SsrSiteProps } from "./SsrSite.js";
 import { Size, toCdkSize } from "./util/size.js";
 
+function pathPattern(basePath = '') {
+  return (pattern: string) =>
+    basePath && basePath.length > 0 ? `${basePath}${pattern}` : pattern;
+}
+
 export interface NextjsSiteProps extends Omit<SsrSiteProps, "nodejs"> {
+  basePath?: string;
   imageOptimization?: {
     /**
      * The amount of memory in MB allocated for image optimization function.
@@ -302,9 +308,11 @@ export class NextjsSite extends SsrSite {
      *    - x-vercel-cache: MISS
      */
 
-    const { customDomain, cdk } = this.props;
+    const { customDomain, cdk, basePath = "" } = this.props;
     const cfDistributionProps = cdk?.distribution || {};
     const serverBehavior = this.buildDefaultBehaviorForRegional();
+
+    const normalizedPath = pathPattern(basePath);
 
     return new Distribution(this, "CDN", {
       scopeOverride: this,
@@ -318,9 +326,9 @@ export class NextjsSite extends SsrSite {
           // these values can NOT be overwritten by cfDistributionProps
           defaultBehavior: serverBehavior,
           additionalBehaviors: {
-            "api/*": serverBehavior,
-            "_next/data/*": serverBehavior,
-            "_next/image*": this.buildImageBehavior(),
+            [normalizedPath('/api/*')]: serverBehavior,
+            [normalizedPath("_next/data/*")]: serverBehavior,
+            [normalizedPath("_next/image*")]: this.buildImageBehavior(),
             ...(cfDistributionProps.additionalBehaviors || {}),
           },
         },
