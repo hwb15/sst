@@ -30,7 +30,7 @@ import { EdgeFunction } from "./EdgeFunction.js";
 import { SsrSite, SsrSiteProps } from "./SsrSite.js";
 import { Size, toCdkSize } from "./util/size.js";
 
-function pathPattern(basePath = '') {
+function pathPattern(basePath = "") {
   return (pattern: string) =>
     basePath && basePath.length > 0 ? `${basePath}${pattern}` : pattern;
 }
@@ -326,9 +326,9 @@ export class NextjsSite extends SsrSite {
           // these values can NOT be overwritten by cfDistributionProps
           defaultBehavior: serverBehavior,
           additionalBehaviors: {
-            [normalizedPath('/api/*')]: serverBehavior,
-            [normalizedPath("_next/data/*")]: serverBehavior,
-            [normalizedPath("_next/image*")]: this.buildImageBehavior(),
+            [normalizedPath("/api/*")]: serverBehavior,
+            [normalizedPath("/_next/data/*")]: serverBehavior,
+            [normalizedPath("/_next/image*")]: this.buildImageBehavior(),
             ...(cfDistributionProps.additionalBehaviors || {}),
           },
         },
