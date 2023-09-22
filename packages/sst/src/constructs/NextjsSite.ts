@@ -149,7 +149,7 @@ export class NextjsSite extends SsrSite {
       serverBuildOutputFile: ".open-next/server-function/index.mjs",
       clientBuildOutputDir: ".open-next/assets",
       clientBuildVersionedSubDir: "_next",
-      clientBuildS3KeyPrefix: "_assets",
+      clientBuildS3KeyPrefix: "blog/_assets",
       prerenderedBuildOutputDir: ".open-next/cache",
       prerenderedBuildS3KeyPrefix: "_cache",
       warmerFunctionAssetPath: path.join(
@@ -329,6 +329,7 @@ export class NextjsSite extends SsrSite {
             [normalizedPath("/api/*")]: serverBehavior,
             [normalizedPath("/_next/data/*")]: serverBehavior,
             [normalizedPath("/_next/image*")]: this.buildImageBehavior(),
+
             ...(cfDistributionProps.additionalBehaviors || {}),
           },
         },
